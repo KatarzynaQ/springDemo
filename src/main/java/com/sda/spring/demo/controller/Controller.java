@@ -6,11 +6,11 @@ import com.sda.spring.demo.model.Category;
 import com.sda.spring.demo.repository.AuthorRepository;
 import com.sda.spring.demo.repository.BookRepository;
 import com.sda.spring.demo.repository.CategoryRepository;
+import com.sda.spring.demo.service.AuthorService;
+import com.sda.spring.demo.service.BookService;
+import com.sda.spring.demo.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -20,12 +20,11 @@ import java.util.List;
 public class Controller {
 
     @Autowired
-    BookRepository bookRepository;
+    BookService bookService;
     @Autowired
-    CategoryRepository categoryRepository;
+    CategoryService categoryService;
     @Autowired
-    AuthorRepository authorRepository;
-
+    AuthorService authorService;
 
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
@@ -40,35 +39,49 @@ public class Controller {
 
     @RequestMapping(value = "/api/books", method = RequestMethod.GET)
     public List<Book> books() {
-        return bookRepository.findAll();
+        return bookService.getBooks();
     }
 
     @RequestMapping(value = "/api/books", method = RequestMethod.POST)
     public Book addBook(@RequestBody Book book) {
-        bookRepository.save(book);
+        bookService.addBook(book);
         return book;
     }
 
     //category
     @RequestMapping(value = "/api/category", method = RequestMethod.GET)
     public List<Category> categories() {
-        return categoryRepository.findAll();
+        return categoryService.getCategories();
     }
 
     @RequestMapping(value = "api/category", method = RequestMethod.POST)
     public Category addCategory(@RequestBody Category category) {
-        categoryRepository.save(category);
+        categoryService.addCategory(category);
         return category;
     }
+
     //author
-    @RequestMapping(value="api/author",method = RequestMethod.GET)
-    public List<Author> authors(){
-       return authorRepository.findAll();
-    }
-    @RequestMapping(value = "api/author",method = RequestMethod.POST)
-    public Author addAuthor(@RequestBody Author author){
-        authorRepository.save(author);
-    return author;
+    @RequestMapping(value = "api/author", method = RequestMethod.GET)
+    public List<Author> authors() {
+        return authorService.getAuthors();
     }
 
+    @RequestMapping(value = "api/author", method = RequestMethod.POST)
+    public Author addAuthor(@RequestBody Author author) {
+        authorService.addAuthor(author);
+        return author;
+    }
+
+    @RequestMapping(value = "api/books/{id}", method = RequestMethod.GET)
+    public Book book(@PathVariable Long id) {
+        return bookService.findById(id);
+    }
+    @RequestMapping(value = "api/category/{id}",method = RequestMethod.POST)
+    public Category category(@PathVariable Long id){
+    return categoryService.findById(id);
+    }
+    @RequestMapping(value="api/author/{id}",method = RequestMethod.POST)
+    public Author find(@PathVariable Long id){
+        return authorService.findById(id);
+    }
 }
