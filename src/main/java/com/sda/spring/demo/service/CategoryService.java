@@ -1,5 +1,6 @@
 package com.sda.spring.demo.service;
 
+import com.sda.spring.demo.exceptions.CategoryNotFoundException;
 import com.sda.spring.demo.interfaces.CategoryInterface;
 import com.sda.spring.demo.model.Category;
 import com.sda.spring.demo.repository.CategoryRepository;
@@ -12,6 +13,7 @@ import java.util.List;
 public class CategoryService implements CategoryInterface {
     @Autowired
     CategoryRepository categoryRepository;
+
     @Override
     public List<Category> getCategories() {
         return categoryRepository.findAll();
@@ -24,7 +26,11 @@ public class CategoryService implements CategoryInterface {
 
     @Override
     public Category findById(Long id) {
-        return categoryRepository.findById(id).get();
+        return categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
+    }
+
+    public Category findByName(String name) {
+        return categoryRepository.findByName(name);
     }
 
     @Override
@@ -36,4 +42,11 @@ public class CategoryService implements CategoryInterface {
     public void delete(Category category) {
 
     }
+
+    public Category updateCategory(Long id, Category category) {
+        Category updatedcategory = categoryRepository.findById(id).orElseThrow(()->new CategoryNotFoundException(id));
+        updatedcategory.setName(category.getName());
+        return categoryRepository.save(updatedcategory);
+    }
+
 }

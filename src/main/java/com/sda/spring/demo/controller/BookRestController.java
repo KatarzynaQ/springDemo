@@ -10,14 +10,18 @@ import com.sda.spring.demo.service.AuthorService;
 import com.sda.spring.demo.service.BookService;
 import com.sda.spring.demo.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 @RestController
-public class Controller {
+public class BookRestController {
 
     @Autowired
     BookService bookService;
@@ -37,6 +41,7 @@ public class Controller {
         return "test";
     }
 
+    @CrossOrigin(value="http://localhost:8000")
     @RequestMapping(value = "/api/books", method = RequestMethod.GET)
     public List<Book> books() {
         return bookService.getBooks();
@@ -54,10 +59,11 @@ public class Controller {
         return categoryService.getCategories();
     }
 
+    @CrossOrigin(value = "http://localhost:8000")
     @RequestMapping(value = "api/category", method = RequestMethod.POST)
-    public Category addCategory(@RequestBody Category category) {
+    public ResponseEntity<Category> addCategory(@RequestBody Category category) {
         categoryService.addCategory(category);
-        return category;
+        return ResponseEntity.status(HttpStatus.CREATED).body(category);
     }
 
     //author
@@ -66,22 +72,36 @@ public class Controller {
         return authorService.getAuthors();
     }
 
+    @CrossOrigin(value = "http://localhost:8000")
     @RequestMapping(value = "api/author", method = RequestMethod.POST)
-    public Author addAuthor(@RequestBody Author author) {
-        authorService.addAuthor(author);
-        return author;
+    public ResponseEntity<Author> addAuthor(@Valid @RequestBody Author author) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(authorService.addAuthor(author));
     }
 
     @RequestMapping(value = "api/books/{id}", method = RequestMethod.GET)
-    public Book book(@PathVariable Long id) {
-        return bookService.findById(id);
+    public ResponseEntity<Book> book(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(bookService.findById(id));
     }
-    @RequestMapping(value = "api/category/{id}",method = RequestMethod.POST)
-    public Category category(@PathVariable Long id){
-    return categoryService.findById(id);
+    @RequestMapping(value = "api/category/{id}",method = RequestMethod.GET)
+    public ResponseEntity<Category> category(@PathVariable Long id){
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(categoryService.findById(id));
     }
-    @RequestMapping(value="api/author/{id}",method = RequestMethod.POST)
-    public Author find(@PathVariable Long id){
-        return authorService.findById(id);
+
+    @RequestMapping(value="api/category/{id}",method = RequestMethod.PUT)
+    public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody Category category){
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(categoryService.updateCategory(id, category));
+    }
+    @RequestMapping(value="api/author/{id}",method = RequestMethod.PUT)
+    public ResponseEntity<Author> updateAuthor(@PathVariable Long id, @RequestBody Author author){
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(authorService.updateAuthor(id, author));
+    }
+    @RequestMapping(value="api/author/{id}",method = RequestMethod.GET)
+    public ResponseEntity<Author> find(@PathVariable Long id){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(authorService.findById(id));
     }
 }

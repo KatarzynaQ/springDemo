@@ -1,0 +1,72 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org/">-->
+<!--<head>-->
+    <!--<meta charset="UTF-8">-->
+    <!--<title>Sklep</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--<h1>Księgarnia</h1>-->
+<!--<table>-->
+<!--<tr>-->
+    <!--<td>Tytuł ksiązki</td>-->
+    <!--<td>Kategoria</td>-->
+    <!--<td>Autorzy</td>-->
+<!--</tr>-->
+    <!--<tr th:each="book :${books}">-->
+
+        <!--<td th:text="${book.getTitle()}"></td>-->
+        <!--<td th:text="${book.getCategory().getName()}"></td>-->
+        <!--<td>-->
+            <!--<p th:each="author:${book.getAuthor()}"></p>-->
+        <!--</td>-->
+
+    <!--</tr>-->
+
+<!--</table>-->
+<!--</body>-->
+<!--</html>-->
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org/">
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Sklep</title>
+
+</head>
+
+<body>
+
+<h1>Księgarnia</h1><table border="1">
+
+    <tr>
+
+        <td>Tytuł książki</td>
+
+        <td>Kategoria</td>
+
+        <td>Autorzy</td>
+
+    </tr>
+
+    <tr th:each="book :${books}">
+
+        <td th:text="${book.getTittle()}"></td>
+
+        <td th:text="${book.getCategory().getName()}"></td>
+
+        <td>
+
+            <div th:each="author : ${book.getAuthor()}">
+                <span th:text="${author.getName()}"></span>
+                <span th:text="${author.getLastname()}"></span>
+            </div>
+        </td>
+
+    </tr>
+
+</table>
+
+</body>
+
+</html>
